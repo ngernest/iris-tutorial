@@ -179,7 +179,7 @@ Definition and_success (P Q : iProp Σ) := (P ∧ Q)%I.
   To see this in action, let us prove that separating conjunction is
   commutative.
 *)
-Lemma sep_comm (P Q : iProp Σ) : P ∗ Q ⊢ Q ∗ P.
+Lemma sep_comm (P Q : iProp Σ) : P ∗ Q ⊢ Q ∗ P. 
 Proof.
   (**
     To eliminate a separating conjunction we can use the tactic
@@ -222,8 +222,10 @@ Qed.
 *)
 Lemma modus_ponens (P Q : iProp Σ) : P -∗ (P -∗ Q) -∗ Q.
 Proof.
-  (* exercise *)
-Admitted.
+  iIntros "HP HPQ".
+  iApply "HPQ".
+  iApply "HP".
+Qed.
 
 (**
   Just as with Coq tactics, Iris allows nesting of introduction
