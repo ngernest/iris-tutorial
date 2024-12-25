@@ -238,8 +238,13 @@ Qed.
 *)
 Lemma sep_assoc_1 (P Q R : iProp Σ) : P ∗ Q ∗ R ⊢ (P ∗ Q) ∗ R.
 Proof.
-  (* exercise *)
-Admitted.
+  iIntros "(HP & HQ & HR)".
+  iSplitR "HR".
+  - iSplitL "HP".
+    + iApply "HP".
+    + iApply "HQ".
+  - iApply "HR". 
+Qed.
 
 (**
   Manually splitting a separation can become tedious. To alleviate this,
