@@ -296,8 +296,17 @@ Qed.
 Lemma wand_adj (P Q R : iProp Σ) : (P -∗ Q -∗ R) ⊣⊢ (P ∗ Q -∗ R).
 Proof.
   iSplit.
-  (* exercise *)
-Admitted.
+  - (* -> *)
+    iIntros "HPQR (HPQ & HR)".
+    (* Both [HPQ] and [HR] should be supplied to both subgoals *)
+    iApply ("HPQR" with "HPQ HR").
+  - (* <- *)  
+    iIntros "HPQR HP HQ".
+    iApply "HPQR".
+    iSplitL "HP".
+    + iApply "HP".
+    + iApply "HQ". 
+Qed.
 
 (**
   Disjunctions [∨] are treated just like disjunctions in Coq. The
