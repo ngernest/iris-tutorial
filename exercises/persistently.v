@@ -88,8 +88,11 @@ Qed.
 
 Lemma pers_dup (P : iProp Σ) `{!Persistent P} : P ⊢ P ∗ P.
 Proof.
-  (* exercise *)
-Admitted.
+  iIntros "#HP".
+  iSplitL "HP".
+  - iApply "HP".
+  - iApply "HP".
+Qed.
 
 (**
   Persistent propositions satisfy a lot of nice properties simply by

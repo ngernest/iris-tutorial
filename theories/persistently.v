@@ -102,7 +102,10 @@ Qed.
   [P -∗ Q] coincide when [P] is persistent.
 *)
 
+(* P ∧ Q ⊣⊢ P ∗ Q *)
 Check bi.persistent_and_sep.
+
+(* (P → Q) ⊣⊢ (P -∗ Q) *)
 Check bi.impl_wand.
 
 (**
