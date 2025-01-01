@@ -257,6 +257,8 @@ Proof.
   wp_cmpxchg as H1 | H2.
   - (* CmpXchg succeeded *)
     iLeft.
+    (* Note: [by iFrame] attempts to solve the goal completely using 
+       [iFrame]. If this fails, Coq raises an error. *)
     by iFrame.
   - (* CmpXchg failed *)
     iRight.
@@ -301,7 +303,18 @@ Proof.
   wp_proj.
   wp_if.
   (* exercise *)
-Admitted.
+  wp_load.
+  wp_let.
+  wp_cmpxchg_suc.
+  wp_proj.
+  wp_if.
+  wp_load.
+  wp_let.
+  wp_pure.
+  iModIntro.
+  iPureIntro.
+  reflexivity.
+Qed.
 
 (**
   We finish this section with a final remark about the points-to
