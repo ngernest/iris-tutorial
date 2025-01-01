@@ -338,7 +338,30 @@ Lemma counter_spec (inc : val) :
   {{{ v, RET v; ⌜v = #2⌝ }}}.
 Proof.
   (* exercise *)
-Admitted.
+  (* Hinc_spec is the precondition (in the persistent context), 
+     and [HΦ] is the postcondition (in the non-spatial context). 
+     We introduce the universally quantified variable Φ (in the definition 
+     of Hoare triples). 
+     Note that universally-quantified variables are enclosed in parens
+     when we [iIntros] them. *)
+  iIntros (Φ) "#Hinc_spec HΦ".
+  rewrite /counter.
+  wp_alloc l as "Hl".
+  wp_let.
+  (* Specialize [Hinc_spec] with [Hl], then apply it *)
+  wp_apply ("Hinc_spec" with "Hl").
+  iIntros (v) "Hl".
+  wp_seq.
+  wp_apply ("Hinc_spec" with "Hl").
+  iIntros (v') "Hl'".
+  wp_seq.
+  wp_load.
+  iModIntro.
+  iApply "HΦ".
+  iPureIntro.
+  reflexivity.
+Qed.
+
 
 (* ----------------------------------------------------------------- *)
 (** *** Persistent Points-to *)
