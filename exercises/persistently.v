@@ -177,7 +177,12 @@ Proof.
     *)
     iFrame "#".
   - (* exercise *)
-Admitted.
+    iIntros "#HPQ".
+    iDestruct "HPQ" as "[#HP #HQ]".
+    iSplitL "HP".
+    + iModIntro. iApply "HP".
+    + iModIntro. iApply "HQ".   
+Qed.
 
 (** Persistency is preserved by quantifications. *)
 
