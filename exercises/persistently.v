@@ -441,6 +441,7 @@ Proof.
   1, 2: wp_load; by iFrame.
   (** The threads return their fractions. *)
   iIntros (v1 v2) "[[-> Hl1] [-> Hl2]]".
+  (** [iNext] is an alias for [iModIntro] *)
   iNext.
   wp_let.
   (** We combine them, allowing us to perform the store. *)
@@ -503,6 +504,27 @@ Proof.
   (** Both threads have the same postcondition, [t_post]. *)
   set t_post := (λ v, (⌜v = #21⌝)%I : iProp Σ).
   (* exercise *)
-Admitted.
+  wp_alloc l as "Hl".
+  wp_let.
+  (* Make [Hl] persistent *)
+  iMod (pointsto_persist with "Hl") as "#Hl".
+  wp_pures.
+  wp_apply (wp_par t_post t_post).
+  - wp_load.
+    wp_pure. 
+    iModIntro.
+    done.
+  - wp_load. 
+    wp_pure.
+    iModIntro.
+    done.
+  - iIntros (v1 v2) "[-> ->]".
+    iModIntro.
+    wp_pures.
+    iModIntro.
+    iApply "HΦ".
+    iPureIntro.
+    reflexivity.
+Qed.
 
 End persistently.
