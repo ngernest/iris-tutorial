@@ -87,11 +87,12 @@ Qed.
 (** Exercise: prove that persistent propositions are duplicable. *)
 
 Lemma pers_dup (P : iProp Σ) `{!Persistent P} : P ⊢ P ∗ P.
-(* SOLUTION *) Proof.
+Proof.
+  (* Introduce [HP] to the persistent context using [#] *)
   iIntros "#HP".
-  iSplit.
-  - done.
-  - done.
+  iSplitL "HP".
+  - iApply "HP".
+  - iApply "HP". 
 Qed.
 
 (**
