@@ -65,8 +65,24 @@ Proof.
     wp_pures.
     by iApply "HΦ".
   - (* Induction step: xs = x :: xs' *)
-    (* exercise *)
-Admitted.
+    iIntros (l Φ).
+    (* [hd] and [l'] are existentially quantified, so we need to put 
+       [%] in front of them. *)
+    iIntros "(%hd & %l' & -> & Hhd & Hl) HΦ". 
+    wp_rec.
+    wp_pures.
+    wp_load.
+    wp_pures.
+    wp_load.
+    wp_pures.
+    wp_store.
+    wp_apply (IH with "Hl").
+    iIntros "Hl'".
+    iApply "HΦ".
+    iExists hd, l'.
+    iFrame.
+    done.
+Qed.
 
 (**
   The append function recursively descends [l1], updating the links.
