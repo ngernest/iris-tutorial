@@ -174,7 +174,32 @@ Proof.
   revert l acc ys.
   induction xs as [| x xs' IH]; simpl.
   (* exercise *)
-Admitted.
+  - (* xs = [] *) 
+    iIntros (l acc ys Φ) "(-> & Hacc) HΦ".
+    wp_rec.
+    wp_pures. 
+    iModIntro.
+    iApply "HΦ".
+    iApply "Hacc".
+  - (* xs = x :: xs' *) 
+    iIntros (l acc ys Φ) "((%hd & %l' & -> & Hhd & Hl) & Hacc) HΦ".
+    wp_rec.
+    wp_pures.
+    wp_load.
+    wp_load.
+    wp_store.
+    (* We need the auxiliary fact [Hhd], otherwise [iFrame] won't
+       work in the first case *)
+    wp_apply (IH _ _ (x :: ys) _ with "[Hl Hhd Hacc]").
+    + iFrame.
+      iPureIntro.
+      reflexivity.
+    + iIntros (v) "Hv". 
+      iApply "HΦ".
+      rewrite cons_middle.
+      rewrite app_assoc.
+      iApply "Hv".
+Qed.
 
 (**
   Now, we use the specification of [reverse_append] to prove the
