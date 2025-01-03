@@ -132,8 +132,16 @@ Proof.
     wp_pures.
     (* Specialize IH with [Hl'] and [Hl2] using the dollar sign *)
     wp_apply (IH with "[$Hl' $Hl2]").
-    Admitted. (* TODO *)
-  (* exercise *)
+    iIntros (l) "Hl".
+    wp_pures.
+    wp_store.
+    wp_pures.
+    iModIntro.
+    iApply "HΦ".
+    iFrame.
+    iPureIntro.
+    reflexivity.
+Qed.    
 
 (**
   We will implement reverse using a helper function called
