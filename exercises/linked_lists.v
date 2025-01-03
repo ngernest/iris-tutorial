@@ -276,7 +276,37 @@ Proof.
   induction xs as [|x xs IHxs].
   all: simpl.
   (* exercise *)
-Admitted.
+  - (* xs = [] *)
+    (* Note that [Hf] needs to go into the persistent context *)
+    iIntros (a l Φ) "(-> & Hemp & HI & #Hf) HΦ".
+    rewrite /fold_right.
+    wp_rec.
+    wp_pures.
+    iModIntro.
+    iApply "HΦ". 
+    iFrame.
+    done.
+  - (* x :: xs *) 
+    (* We put [Hf] in the persistent context by writing [#Hf] *)
+    iIntros 
+      (a l Φ) 
+      "((%hd & %l' & -> & Hhd & Hl') & (HPx & Hlist) & HI & #Hf) HΦ".
+    wp_rec.
+    wp_pures.
+    wp_load.
+    wp_load.
+    wp_pures.
+    wp_apply (IHxs with "[$Hl' $Hlist $HI $Hf]").
+    iIntros (r) "(Hl' & HI)".
+    wp_apply ("Hf" with "[$HI $HPx]").
+    iIntros "%r' HI".
+    iApply "HΦ".
+    iFrame "HI".
+    iExists hd, l'.
+    iFrame.
+    done.
+Qed.    
+
 
 (**
   We can now sum over a list simply by folding an addition function over
