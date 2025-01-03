@@ -211,7 +211,14 @@ Lemma reverse_spec (l : val) (xs : list val) :
   {{{ v, RET v; isList v (rev xs) }}}.
 Proof.
   (* exercise *)
-Admitted.
+  iIntros (Φ) "Hl HΦ".
+  rewrite /reverse.
+  wp_lam.
+  wp_pures.
+  wp_apply (reverse_append_spec _ _ _ [] with "[$Hl]").
+  + by simpl.
+  + rewrite app_nil_r. iApply "HΦ".
+Qed.  
 
 (**
   The specifications thus far have been rather straightforward. Now we
