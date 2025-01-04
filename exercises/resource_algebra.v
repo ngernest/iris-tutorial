@@ -263,13 +263,17 @@ Lemma dfrac_op_both_disc : ∃ x : dfrac,
   DfracBoth (2/3) ⋅ DfracDiscarded = x.
 Proof.
   (* exercise *)
-Admitted.
+  exists (DfracBoth (2/3)).
+  compute_done.
+Qed.
 
 Lemma dfrac_op_frac_both : ∃ x : dfrac,
   DfracOwn (1/4) ⋅ DfracBoth (2/4) = x.
 Proof.
   (* exercise *)
-Admitted.
+  exists (DfracBoth (3/4)).
+  compute_done.
+Qed.
 
 (**
   As dfrac is a record of type [RAMixin], we know that [⋅] must be
@@ -288,7 +292,9 @@ Lemma dfrac_op_comm (dq1 dq2 : dfrac) :
   dq1 ⋅ dq2 = dq2 ⋅ dq1.
 Proof.
   (* exercise *)
-Admitted.
+  rewrite dfrac_ra_mixin.(ra_comm _).
+  done.
+Qed.
 
 (* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *)
 (** **** Valid Elements (the [Valid A]) *)
