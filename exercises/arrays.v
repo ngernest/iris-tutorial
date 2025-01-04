@@ -137,13 +137,13 @@ Proof.
   iIntros "%Φ Ha HΦ".
   iLöb as "IH" forall (a l).
   destruct l as [|i l].  
-  - (* l = [] *) 
+  - (* Nil *) 
     wp_lam. 
     wp_let.
     wp_pures. 
     iModIntro. 
     by iApply "HΦ".
-  - (* l = x :: xs *) 
+  - (* Cons *) 
     wp_lam.
     wp_let.
     wp_pures.  
@@ -189,6 +189,56 @@ Lemma reverse_spec a l :
   {{{RET #(); a ↦∗ rev l}}}.
 Proof.
   (* exercise *)
-Admitted.
+  iIntros "%Φ Ha HΦ".
+  iLöb as "IH" forall (a l).
+  wp_rec.
+  wp_pures.
+  destruct (bool_decide_reflect (length l ≤ 1)%Z) as [H|H].
+  - (* length l <= 1 *) 
+    rewrite <- (Nat2Z.inj_le _ 1) in H.
+    wp_pures. 
+    iModIntro. 
+    iApply "HΦ".
+    destruct l as [|v1 [|v2 l]].
+    + (* l = [] *) 
+      simpl. iApply "Ha".
+    + (* l = [v1] *) 
+      simpl. iApply "Ha".
+    + (* l = v1 :: v2 :: l *) 
+      simpl in H.
+      apply le_S_n in H.
+      inversion H. (* contradiction *)
+  - (* length l > 1 *) 
+    rewrite Z.nle_gt in H.
+    wp_pures.
+    induction l as [|v2 l _] using rev_ind.
+    + (* l = [] *) 
+      done.
+    + (* v2 :: l *)
+      destruct l as [|v1 l]; first done.
+      clear H.
+      change (v1 :: ?l) with ([v1] ++ l) at 2.
+      rewrite !rev_app_distr app_length Nat2Z.inj_add /=.
+      rewrite !array_cons !array_app !array_singleton.
+      rewrite rev_length Loc.add_assoc.
+      iDestruct "Ha" as "(Hv1 & Hl & Hv2)".
+      wp_pures.
+      wp_load.
+      wp_pures.
+      rewrite Z.add_simpl_r.
+      change 1%Z with (Z.of_nat 1) at 2 4.
+      rewrite -Nat2Z.inj_add /=.
+      wp_load.
+      wp_store.
+      wp_store.
+      wp_pures.
+      rewrite {3}Nat2Z.inj_succ Z.add_succ_comm.
+      rewrite (Z.add_simpl_r _ 2).
+      wp_apply ("IH" with "Hl").
+      iIntros "Hl".
+      iApply "HΦ".
+      iFrame.
+Qed.
+
 
 End proofs.
