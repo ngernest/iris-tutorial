@@ -332,7 +332,9 @@ Qed.
 Lemma dfrac_valid_discarded : ✓ (DfracDiscarded).
 Proof.
   (* exercise *)
-Admitted.
+  rewrite dfrac_valid.
+  done.
+Qed.
 
 Lemma dfrac_invalid_own : ¬ (✓ (DfracOwn (2/3) ⋅ DfracOwn (2/3))).
 Proof.
@@ -399,12 +401,16 @@ Qed.
 Lemma dfrac_pre_disc_both : DfracDiscarded ≼ DfracBoth (3/4).
 Proof.
   (* exercise *)
-Admitted.
+  exists (DfracOwn (3/4)).
+  compute_done.
+Qed.
 
 Lemma dfrac_pre_own_both : DfracOwn (2/4) ≼ DfracBoth (3/4).
 Proof.
   (* exercise *)
-Admitted.
+  exists (DfracBoth (1/4)).
+  compute_done.
+Qed.
 
 (* ----------------------------------------------------------------- *)
 (** *** Frame Preserving Update *)
