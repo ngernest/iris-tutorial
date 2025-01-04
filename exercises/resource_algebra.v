@@ -554,7 +554,17 @@ Proof.
   { compute_done. }
   rewrite cmra_opM_opM_assoc_L.
   (* exercise *)
-Admitted.
+  assert (∀dq mz, ✓(dq ⋅? mz) → ✓(DfracDiscarded ⋅? mz)) as
+    Hdfrac_discard_update_discrete.
+  { intros dq. 
+    rewrite <- cmra_discrete_update.
+    apply dfrac_discard_update. }
+  (* [DfracOwn (1/2)] is the stuff we've discarded *)
+  apply (Hdfrac_discard_update_discrete (DfracOwn (1/2))).
+  rewrite <- cmra_opM_opM_assoc_L.
+  simpl.
+  apply Hvalid.
+Qed.
 
 (* ================================================================= *)
 (** ** Example Resource Algebra *)
