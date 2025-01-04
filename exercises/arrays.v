@@ -134,7 +134,30 @@ Lemma inc_spec a l :
   {{{RET #(); a ↦∗ ((λ i : Z, #(i + 1)) <$> l)}}}.
 Proof.
   (* exercise *)
-Admitted.
+  iIntros "%Φ Ha HΦ".
+  iLöb as "IH" forall (a l).
+  destruct l as [|i l].  
+  - (* l = [] *) 
+    wp_lam. 
+    wp_let.
+    wp_pures. 
+    iModIntro. 
+    by iApply "HΦ".
+  - (* l = x :: xs *) 
+    wp_lam.
+    wp_let.
+    wp_pures.  
+    rewrite !array_cons.
+    iDestruct "Ha" as "[Hi Ha]".
+    wp_load. 
+    wp_store.
+    wp_pures.
+    rewrite Nat2Z.inj_succ Z.sub_1_r Z.pred_succ.
+    wp_apply ("IH" with "Ha").
+    iIntros "Ha".
+    iApply "HΦ".
+    iFrame.
+Qed.
 
 (* ================================================================= *)
 (** ** Reverse *)
