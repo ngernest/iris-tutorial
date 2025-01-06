@@ -769,7 +769,11 @@ Lemma agree_valid_opL (a b : A) : ✓ (to_agree a ⋅ to_agree b) →
   to_agree a ⋅ to_agree b ≡ to_agree a.
 Proof.
   (* exercise *)
-Admitted.
+  intros.
+  apply to_agree_op_valid in H.
+  rewrite H.
+  apply agree_idemp.
+Qed.
 
 (**
   Due to idempotency and the fact that the combination of equivalent
