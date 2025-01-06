@@ -786,7 +786,22 @@ Local Lemma to_agree_included (a b : A) :
 Proof.
   split.
   (* exercise *)
-Admitted.
+  - (* -> *) 
+    intros H. destruct H as [c Hequiv].
+    rewrite <- to_agree_op_valid.
+    rewrite Hequiv.
+    rewrite assoc.
+    rewrite agree_idemp.
+    rewrite <- Hequiv.
+    apply agree_valid.
+  - (* <- *) 
+    intros H.
+    unfold "≼".
+    eexists. 
+    rewrite H.
+    symmetry.
+    apply agree_idemp.
+Qed.
 
 (**
   The usefulness of the agree construction is demonstrated by the fact
