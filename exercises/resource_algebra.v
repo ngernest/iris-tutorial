@@ -1105,8 +1105,16 @@ Lemma own_dfrac_both_disc (γ : gname) :
   own γ (DfracBoth (2/3)) ⊢
   (own γ (DfracBoth (2/3))) ∗ (own γ DfracDiscarded).
 Proof.
-  (* exercise *)
-Admitted.
+  iIntros "Htoken1".
+  rewrite <- dfrac_op_both.
+  iDestruct "Htoken1" as "[Hown #Hdisc]".
+  (* We do [iFrame "#"] to frame propositions from the
+      persistent context *)
+  iFrame "#".
+  iSplit.
+  - iApply "Hown".
+  - iApply "Hdisc".  
+Qed.  
 
 (* ----------------------------------------------------------------- *)
 (** *** Update Modality *)
