@@ -307,9 +307,6 @@ Proof.
 Qed.     
       
 
-    
-Admitted.
-
 (* ================================================================= *)
 (** ** A Simple Counter Client *)
 
@@ -330,7 +327,27 @@ Lemma par_incr :
   {{{ n, RET #(S n); True }}}.
 Proof.
   (* exercise *)
-Admitted.
+  iIntros (Φ) "_ HΦ".
+  wp_apply mk_counter_spec; first done.
+  (* Hγ is introduced to the persistent context *)
+  iIntros "%c %γ #Hγ".
+  wp_pures.
+  (* The post-condition of both threads is that [c] is a counter
+     that is at least [1] *)
+  wp_apply (wp_par (λ _, is_counter c γ 1) (λ _, is_counter c γ 1)).
+  1, 2: iApply (incr_spec with "Hγ").
+  1, 2: iIntros "!> %n [_ $]".
+  iClear "Hγ".
+  iIntros "%v1 %v2 [#Hγ _] !>".
+  wp_pures.
+  wp_apply (read_spec with "Hγ").
+  (* Introduce [n] and [H] to the regular Coq context *)
+  iIntros (n H).
+  destruct n as [| n'].
+  - (* n = 0 *) inversion H. 
+  - (* n = S n' *)
+    iApply "HΦ". done.
+Qed.
 
 End spec1.
 End spec1.
