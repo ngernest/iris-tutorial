@@ -1232,7 +1232,10 @@ Qed.
 Lemma dfrac_alloc_one : ⊢ |==> ∃ γ, own γ (DfracOwn 1).
 Proof.
   (* exercise *)
-Admitted.
+  iApply own_alloc.
+  rewrite dfrac_valid.
+  done.
+Qed.
 
 (**
   After having allocated new resources, we may update them using the
