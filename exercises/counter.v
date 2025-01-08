@@ -197,7 +197,27 @@ Lemma mk_counter_spec :
   {{{ True }}} mk_counter #() {{{ c γ, RET c; is_counter c γ 0}}}.
 Proof.
   (* exercise *)
-Admitted.
+  iIntros (Φ) "_ HΦ".
+  rewrite /mk_counter.
+  wp_lam.
+  wp_alloc l as "Hl".
+  iMod alloc_initial_state as "(%γ & Hγ & Hγ')".
+  iApply "HΦ".
+  rewrite /is_counter.
+  iExists l.
+  iSplitR.
+  - iPureIntro. 
+    done.
+  - (* When the goal contains an invariant behind a fancy update modality, 
+       we apply [inv_alloc] to turn it into a proposition that is under 
+       the later modality *)
+    iFrame. 
+    iApply inv_alloc.  
+    iModIntro.
+    iExists 0.
+    iFrame.
+Qed.
+    
 
 Lemma read_spec c γ n :
   {{{ is_counter c γ n }}} read c {{{ (u : nat), RET #u; ⌜n ≤ u⌝ }}}.
