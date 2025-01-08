@@ -334,6 +334,7 @@ Proof.
   (** We prove that the invariant is currently true. *)
   {
     iNext.
+    rewrite /prog_inv.
     iExists #0.
     iFrame.
     by iLeft.
