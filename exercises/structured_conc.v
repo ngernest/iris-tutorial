@@ -453,6 +453,40 @@ Proof.
     }
     by iApply "HΦ'".
   (* exercise *)
-Admitted.
+  - (* Introduce the pre & post-conditions of the triple. 
+       The pre-condition is trivial, so we can elide it. *)
+    iIntros (Φ') "!> _ HΦ'".
+    (* We open the invariant [I] and name its components *)
+    iInv "I" as "(%n & Hr & >%Hn)".
+    wp_faa.
+    iModIntro.
+    iSplitL "Hr".
+    + rewrite /parallel_add_inv.
+      iModIntro.
+      iExists (n + 6)%Z.
+      iFrame.
+      iPureIntro.
+      (* even + even is even *)
+      apply Zeven_plus_Zeven; auto.
+      compute_done.
+    + iApply "HΦ'". done.
+  - done.
+  - iIntros (v1 v2) "_".
+    wp_pures.
+    iInv "I" as "(%n & Hr & >%Hn)".
+    iMod "Hr".
+    wp_load.
+    iModIntro.
+    rewrite /parallel_add_inv.
+    iSplitL "Hr".
+    + iModIntro.
+      iExists n%Z.
+      iFrame.
+      iPureIntro.
+      apply Hn.
+    + iApply "HΦ".
+      iPureIntro.
+      apply Hn.
+Qed.        
 
 End parallel_add.
