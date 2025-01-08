@@ -223,7 +223,25 @@ Lemma read_spec c γ n :
   {{{ is_counter c γ n }}} read c {{{ (u : nat), RET #u; ⌜n ≤ u⌝ }}}.
 Proof.
   (* exercise *)
-Admitted.
+  iIntros (Φ) "HI HΦ".
+  unfold is_counter.
+  iDestruct "HI" as "(%l & -> & Hγ' & #HI)".
+  rewrite /read.
+  wp_lam.
+  (* We use [iInv] to open the invariant [HI] *) 
+  iInv "HI" as "(%m & Hl & Hγ)".
+  wp_load.
+  iModIntro.
+  (* We introduce an extra hypothesis that [n ≤ m] by applying 
+     [iPoseProof] to [state_valid Hγ Hγ']. This is morally like [iDestruct],
+     but keeps the original hypothesis around *)
+  iPoseProof (state_valid with "Hγ Hγ'") as "%H".
+  iFrame.
+  iApply "HΦ".
+  iPureIntro.
+  apply H.
+Qed.
+
 
 Lemma incr_spec c γ n :
   {{{ is_counter c γ n }}}
