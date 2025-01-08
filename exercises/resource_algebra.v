@@ -1271,6 +1271,14 @@ Lemma hoare_triple_dfrac (γ : gname):
   {{{ own γ (DfracOwn 1) }}} #1 + #1 {{{v , RET v; own γ DfracDiscarded }}}.
 Proof.
   (* exercise *)
-Admitted.
+  iIntros (Φ) "Hdf1 HΦ".
+  (* the next line is morally the same as doing 
+    [apply (own_dfrac_update Hdf1) in Hdisc] *)
+  iMod (own_dfrac_update with "Hdf1") as "Hdisc".
+  wp_pures.
+  iModIntro.
+  iApply "HΦ".
+  iApply "Hdisc".
+Qed.
 
 End ghost.
