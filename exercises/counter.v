@@ -201,6 +201,8 @@ Proof.
   rewrite /mk_counter.
   wp_lam.
   wp_alloc l as "Hl".
+  (* We add the result of the [alloc_initial_state] lemma
+     in our context using [iMod] *)
   iMod alloc_initial_state as "(%γ & Hγ & Hγ')".
   iApply "HΦ".
   rewrite /is_counter.
@@ -261,11 +263,51 @@ Proof.
   wp_bind (CmpXchg _ _ _).
   iInv "HI" as "(%m' & Hl & Hγ)".
   destruct (decide (#m = #m')) as [e | ne].
-  - wp_cmpxchg_suc.
+  - (* CmpXchg succeeds *)
+    wp_cmpxchg_suc.
     injection e as e.
     apply (inj Z.of_nat) in e.
     subst m'.
     (* exercise *)
+    (* Convert [m + 1] to [S m] *)
+    rewrite Z.add_comm -(Nat2Z.inj_add 1) /=.
+    (* Add the hypothesis that [n ≤ m] *)
+    iPoseProof (state_valid with "Hγ Hγ'") as "%H".
+    iClear "Hγ'".
+    (* Use the result of the [upstate_state] lemma *)
+    iMod (update_state with "Hγ") as "[Hγ Hγ']".
+    iModIntro.
+    iSplitL "Hl Hγ".
+    + iModIntro.
+      iExists (S m).
+      iFrame.
+    + wp_pures.
+      iModIntro.
+      iApply "HΦ".
+      iSplitR; first done.
+      iExists l.
+      iSplitR; first done.
+      (* Rewrite [S m] as [S m `max` S n] *)
+      rewrite -(max_l (S m) (S n)); last by apply le_n_S.
+      (* Destruct [Hγ'] into its two conjuncts, then immediately
+         apply the 2nd conjunct to discharge the left arm of the [*] *)
+      iDestruct "Hγ'" as "[_ $]".
+      iApply "HI".
+  - (* CmpXchg fails *)
+    wp_cmpxchg_fail.
+    iModIntro.
+    iSplitL "Hl Hγ".
+    + iExists m'. 
+      iModIntro. 
+      iFrame.
+    + wp_pures.
+      iApply "IH".
+      iModIntro.
+      iApply "HΦ".
+Qed.     
+      
+
+    
 Admitted.
 
 (* ================================================================= *)
