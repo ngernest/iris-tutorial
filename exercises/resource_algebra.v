@@ -1196,7 +1196,9 @@ Qed.
 Lemma upd_idemp (P : iProp Σ): (|==> |==> P) ⊢ |==> P.
 Proof.
   (* exercise *)
-Admitted.
+  iIntros ">>HP !>".
+  iApply "HP".
+Qed.
 
 (* ----------------------------------------------------------------- *)
 (** *** Allocation and Updates *)
